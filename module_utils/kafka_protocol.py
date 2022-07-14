@@ -649,3 +649,58 @@ class AlterUserScramCredentialsRequest_v0(Request):
 
 
 API_KEYS[51] = 'AlterUserScramCredentials'
+
+
+class AlterConfigsResponse_v2(Response):
+    """
+    AlterConfigs Response (Version: 2) => throttle_time_ms [responses] TAG_BUFFER 
+    throttle_time_ms => INT32
+    responses => error_code error_message resource_type resource_name TAG_BUFFER 
+        error_code => INT16
+        error_message => COMPACT_NULLABLE_STRING
+        resource_type => INT8
+        resource_name => COMPACT_STRING
+    """
+    API_KEY = 33
+    API_VERSION = 2
+    SCHEMA = Schema(
+        ('throttle_time_ms', Int32),
+        ('responses', Array(
+            ('error_code', Int16),
+            ('error_message', CompactString('utf-8')),
+            ('resource_type', Int8),
+            ('resource_name', CompactString('utf-8')),
+            ('tags', TaggedFields)    
+        )),
+        ('tags', TaggedFields)
+    )
+
+
+class AlterConfigsRequest_v2(Request):
+    """
+    AlterConfigs Request (Version: 2) => [resources] validate_only TAG_BUFFER 
+        resources => resource_type resource_name [configs] TAG_BUFFER 
+            resource_type => INT8
+            resource_name => COMPACT_STRING
+            configs => name value TAG_BUFFER 
+                name => COMPACT_STRING
+                value => COMPACT_NULLABLE_STRING
+        validate_only => BOOLEAN
+    """
+    API_KEY = 33
+    API_VERSION = 2
+    RESPONSE_TYPE = AlterConfigsResponse_v2
+    SCHEMA = Schema(
+        ('resources', Array(
+            ('resource_type', Int8),
+            ('resource_name', CompactString('utf-8')),
+            ('configs', Array(
+                ('name', CompactString('utf-8')),
+                ('value', CompactString('utf-8')),
+                ('tags', TaggedFields)
+            )),
+            ('tags', TaggedFields)
+        )),
+        ('validate_only', Boolean),
+        ('tags', TaggedFields)
+    )
